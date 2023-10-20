@@ -17,7 +17,7 @@ auto_increment determina que o MySQL dê um id novo a cada cadastro*/
 /* Varchar é a quantidade variavel de caracteres no nome (nesse caso,até 100 caracteres)
 not null determina que  campo seja obrigatorio */
 
-    /*nomeFunc varchar (100) not null,*/
+    nomeFunc varchar (100) not null,
     
 /* Unique determina que o campo seja unico e o valor nao possa repetir */
     login varchar(20) not null unique,
@@ -28,8 +28,12 @@ not null determina que  campo seja obrigatorio */
 /* Descrever os campos da tabela */
 describe funcionarios;
 
-/* Excluir a tabela do banco */
-drop table funcionarios;
+alter table funcionarios drop column email;
+
+/* Reposicionar o campo email para que se torne obrigatorio, ou seja, nao nulo (not null) */
+alter table funcionarios modify column email varchar (50) not null after login;
+
+alter table funcionarios add column email varchar(50) not null;
 
 show tables;
 
@@ -51,8 +55,13 @@ insert into funcionarios(nomeFunc, login, senha) values ("Fellipe Coelho", "fell
 /* Ler/Buscar as informações da tabela funcionarios */
 select * from funcionarios;
 
+/* Buscar o login e a senha da tabela funcionarios em que o login seja admin e senha seja admin */
+select login as Login, senha as Senha from funcionarios where login = "dmin" and senha = md5("admin");
+
 /* UPDATE */
 /* Atualizar o campo login na tabela funcionarios especificando o id */
 update funcionarios set login = "felipecoelho" where idFunc = 6;
 
 update funcionarios set cargo = "Gerencia" where idFunc = 4;
+
+update funcionarios set email = "fellipe@gmail.com" where idFunc = 6;
