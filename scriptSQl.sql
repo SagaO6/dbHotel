@@ -51,12 +51,47 @@ insert into funcionarios(nomeFunc, login, senha) values ("Laura Lopes", "lauralo
 
 insert into funcionarios(nomeFunc, login, senha) values ("Fellipe Coelho", "fellipe", md5("123@senac"));
 
+insert into funcionarios(nomeFunc, login, senha, email, cargo) values ("Isack Alves", "Marcelo", md5("123@senac"), "Isack@gmail.com", "Gerencia");
+
+create table Quartos (
+idQuarto int primary key auto_increment,
+andar varchar(10) not null,
+tipoQuarto varchar(50) not null,
+ocupacaoMax int not null,
+situacao char (3) not null,
+nome varchar (50) not null,
+descricao text,
+preco decimal (10,2) not null,
+tipoCama varchar (20),
+varada char (3)
+);
+
+describe Quartos;
+
+alter table Quartos add column numeroQuarto varchar(10) not null after andar;
+
 /* READ */
 /* Ler/Buscar as informações da tabela funcionarios */
 select * from funcionarios;
 
 /* Buscar o login e a senha da tabela funcionarios em que o login seja admin e senha seja admin */
 select login as Login, senha as Senha from funcionarios where login = "dmin" and senha = md5("admin");
+
+/* Buscas o ID e o nome do funcionario da tabela funcionarios ordenado o nome alfabeticamente (ascendente, de A a Z) */
+select idFunc as ID_Funcionario, nomeFunc as Nome_Funcionario from funcionarios order by nomeFunc desc;
+
+/* Buscas o ID e o nome do funcionario da tabela funcionarios ordenado o nome alfabeticamente (descedente, de A a Z) */
+select idFunc as ID_Funcionario, nomeFunc as Nome_Funcionario from funcionarios order by nomeFunc asc;
+
+/* ATIVIDADE: busque os campos ID com o apelido ID_Funcionario, nome com o apelido Nome_Funcionario, e cargo com o apelido cargo_Funcionario
+da tabela funcionarios e ordene de forma descendente (do maior ID para o menor) */
+
+select idFunc as ID_Funcionario, nomeFunc as Nome_Funcionario, cargo as cargo_Funcionario from funcionarios order by idFunc desc;
+
+/* cargo <> 'null' tira todos os cargos que sao nulos (<>, significa diferente dele) */
+select idFunc as ID_Funcionario, nomeFunc as Nome_Funcionario, cargo as cargo_Funcionario from funcionarios where cargo <> 'null' order by idFunc desc;
+
+select * from funcionarios where cargo = 'Gerencia';
 
 /* UPDATE */
 /* Atualizar o campo login na tabela funcionarios especificando o id */
@@ -65,3 +100,6 @@ update funcionarios set login = "felipecoelho" where idFunc = 6;
 update funcionarios set cargo = "Gerencia" where idFunc = 4;
 
 update funcionarios set email = "fellipe@gmail.com" where idFunc = 6;
+
+/* Delete */
+delete from funcionarios where idFunc = 5;
