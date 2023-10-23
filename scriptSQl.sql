@@ -53,23 +53,6 @@ insert into funcionarios(nomeFunc, login, senha) values ("Fellipe Coelho", "fell
 
 insert into funcionarios(nomeFunc, login, senha, email, cargo) values ("Isack Alves", "Marcelo", md5("123@senac"), "Isack@gmail.com", "Gerencia");
 
-create table Quartos (
-idQuarto int primary key auto_increment,
-andar varchar(10) not null,
-tipoQuarto varchar(50) not null,
-ocupacaoMax int not null,
-situacao char (3) not null,
-nome varchar (50) not null,
-descricao text,
-preco decimal (10,2) not null,
-tipoCama varchar (20),
-varada char (3)
-);
-
-describe Quartos;
-
-alter table Quartos add column numeroQuarto varchar(10) not null after andar;
-
 /* READ */
 /* Ler/Buscar as informações da tabela funcionarios */
 select * from funcionarios;
@@ -103,3 +86,75 @@ update funcionarios set email = "fellipe@gmail.com" where idFunc = 6;
 
 /* Delete */
 delete from funcionarios where idFunc = 5;
+
+/*________________________________________________________________________________________________*/
+
+/* Tabela Quartos */
+
+create table Quartos (
+idQuarto int primary key auto_increment,
+andar varchar(10) not null,
+tipoQuarto varchar(50) not null,
+ocupacaoMax int not null,
+situacao char (3) not null,
+nome varchar (50) not null,
+descricao text,
+preco decimal (10,2) not null,
+tipoCama varchar (20),
+varanda char (3)
+);
+
+drop table Quartos;
+
+describe Quartos;
+
+alter table Quartos add column numeroQuarto varchar(10) not null after andar;
+alter table Quartos add column cafeDaManha char(3) not null after preco;
+alter table Quartos add column foto varchar (255) not null after descricao;
+
+insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, situacao, nome, descricao, preco, tipoCama, varanda, foto, cafeDaManha) values ("1º", "111",
+"Deluxe", 2, "sim", "Casal", "O quarto de 32m² com piso frio, varanda - vista para o mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,
+cofre digital, ftigobar abastecido e banheiro com secador de cabelo e amenities e mesa de trabalho", 200.00, "Queen Size", "sim", "", "Não");
+
+update Quartos set cafeDaManha = "não" where idQuarto = 6;
+update Quartos set foto = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/427861759.jpg?k=8e32bd8bf0f4e883b632dc439164cad3e5fd7059a729b780ccfdb278584a311b&o=&hp=1" where idQuarto = 1;
+
+select * from Quartos where situacao = "não";
+select * from Quartos where cafeDaManha = "sim";
+select * from Quartos where varanda = "sim" and cafeDaManha = "sim" and situacao = "não";
+select * from Quartos where preco < 700.00 and situacao = "não" order by preco asc;
+
+Delete from Quartos Where idQuarto = 3;
+
+select * from Quartos;
+
+/* Fim Quartos */
+
+/*____________________________________________________________________________________________________*/
+
+/* Tabela Clientes */
+
+create table clientes (
+
+idCliente int key auto_increment,
+nomeCompleto varchar (100) not null,
+cpf char (14) not null unique,
+rg char (12) not null unique,
+email varchar (50) unique,
+celular varchar (15) not null,
+numeroCartao varchar (20) not null,
+nomeTitular varchar (100) not null,
+validade date not null,
+cvv char(3) not null,
+checkin datetime not null,
+checkout datetime not null,
+idQuarto int not null,
+foreign key (idQuarto) references quartos (idQuarto)
+
+);
+
+describe clientes;
+
+
+
+/* Fim Clientes */
