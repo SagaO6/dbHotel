@@ -155,6 +155,19 @@ foreign key (idQuarto) references quartos (idQuarto)
 
 describe clientes;
 
+insert into clientes (nomeCompleto, cpf, rg, email, celular, numeroCartao, nomeTitular, validade, cvv, checkin, checkout, idQuarto) values
+("Thiago Rivas Caballero", "643.453.400-04", "41.351.272-1", "Thiago@gmail.com", "(11) 98701-0793", "4455082150938777", "Thiago", "2030-03-26",
+ "719", "2023-11-10 13:00:00", "2023-11-15 15:00:00", 5);
+ 
+ insert into clientes (nomeCompleto, cpf, rg, email, celular, numeroCartao, nomeTitular, validade, cvv, checkin, checkout, idQuarto) values
+("Ana Julia dos Santos", "356.474.465-01", "48.342.289-5", "Ana@gmail.com", "(11) 98721-8931", "8555321495356758", "Ana", "2030-05-30",
+ "879", "2023-12-10 09:00:00", "2023-12-15 19:00:00", 1);
+ 
+select * from clientes;
 
+select quartos.idQuarto,
+clientes.celular
+from quartos inner join clientes
+on quartos.idQuarto = clientes.idQuarto where numeroQuarto = 505;
 
 /* Fim Clientes */
