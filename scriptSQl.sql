@@ -105,7 +105,7 @@ varanda char (3)
 
 );
 
-drop table Quartos;
+drop table quartos;
 
 describe Quartos;
 
@@ -218,4 +218,25 @@ describe Pedidos;
 insert into Pedidos (statusPedido, idCliente) values ("Pendente", 1);
 insert into Pedidos (statusPedido, idCliente) values ("Finalizado", 2);
 
+select * from Pedidos;
+
 /* Fim Pedidos*/
+
+/*______________________________________________________________________________________________________________*/
+
+/* Tabela Reservas */
+
+create table Reservas (
+idReserva int primary key auto_increment,
+idPedidos int not null,
+idQuarto int not null,
+foreign key (idPedidos) references Pedidos (idPedidos),
+foreign key (idQuarto) references Quartos (idQuarto)
+
+);
+
+drop table Reservas;
+
+describe Reservas;
+
+/* Fim Reservas */
