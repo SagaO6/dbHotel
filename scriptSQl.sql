@@ -102,6 +102,7 @@ descricao text,
 preco decimal (10,2) not null,
 tipoCama varchar (20),
 varanda char (3)
+
 );
 
 drop table Quartos;
@@ -112,19 +113,20 @@ alter table Quartos add column numeroQuarto varchar(10) not null after andar;
 alter table Quartos add column cafeDaManha char(3) not null after preco;
 alter table Quartos add column foto varchar (255) not null after descricao;
 
-insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, situacao, nome, descricao, preco, tipoCama, varanda, foto, cafeDaManha) values ("1º", "111",
-"Deluxe", 2, "sim", "Casal", "O quarto de 32m² com piso frio, varanda - vista para o mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,
-cofre digital, ftigobar abastecido e banheiro com secador de cabelo e amenities e mesa de trabalho", 200.00, "Queen Size", "sim", "", "Não");
+insert into Quartos (andar, numeroQuarto, tipoQuarto, ocupacaoMax, situacao, nome, descricao, preco, tipoCama, varanda, foto, cafeDaManha) values ("1º", "101",
+"Deluxe", 4, "não", "Casal", "O quarto de 32m² com piso frio, varanda - vista para o mar. Oferece ar condicionado individual, TV LCD 42, wi-fi grátis,
+cofre digital, ftigobar abastecido e banheiro com secador de cabelo e amenities e mesa de trabalho", 1200.00, "king size", "sim", "", "sim");
 
 update Quartos set cafeDaManha = "não" where idQuarto = 6;
-update Quartos set foto = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/427861759.jpg?k=8e32bd8bf0f4e883b632dc439164cad3e5fd7059a729b780ccfdb278584a311b&o=&hp=1" where idQuarto = 1;
+update Quartos set foto = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/427861759.jpg?k=8e32bd8bf0f4e883b632dc439164cad3e5fd7059a729b780ccfdb278584a311b&o=&hp=1" where idQuarto = 9;
+update Quartos set foto = "https://cf.bstatic.com/xdata/images/hotel/max1024x768/427861759.jpg?k=8e32bd8bf0f4e883b632dc439164cad3e5fd7059a729b780ccfdb278584a311b&o=&hp=1" where idQuarto = 11;
 
 select * from Quartos where situacao = "não";
 select * from Quartos where cafeDaManha = "sim";
 select * from Quartos where varanda = "sim" and cafeDaManha = "sim" and situacao = "não";
 select * from Quartos where preco < 700.00 and situacao = "não" order by preco asc;
 
-Delete from Quartos Where idQuarto = 3;
+Delete from Quartos Where idQuarto = 10;
 
 select * from Quartos;
 
@@ -147,27 +149,73 @@ nomeTitular varchar (100) not null,
 validade date not null,
 cvv char(3) not null,
 checkin datetime not null,
-checkout datetime not null,
-idQuarto int not null,
-foreign key (idQuarto) references quartos (idQuarto)
+checkout datetime not null
 
 );
 
+drop table clientes;
+
+select * from Quartos;
+
 describe clientes;
 
-insert into clientes (nomeCompleto, cpf, rg, email, celular, numeroCartao, nomeTitular, validade, cvv, checkin, checkout, idQuarto) values
+insert into clientes (nomeCompleto, cpf, rg, email, celular, numeroCartao, nomeTitular, validade, cvv, checkin, checkout) values
 ("Thiago Rivas Caballero", "643.453.400-04", "41.351.272-1", "Thiago@gmail.com", "(11) 98701-0793", "4455082150938777", "Thiago", "2030-03-26",
- "719", "2023-11-10 13:00:00", "2023-11-15 15:00:00", 5);
+ "719", "2023-11-10 13:00:00", "2023-11-15 15:00:00");
  
- insert into clientes (nomeCompleto, cpf, rg, email, celular, numeroCartao, nomeTitular, validade, cvv, checkin, checkout, idQuarto) values
+insert into clientes (nomeCompleto, cpf, rg, email, celular, numeroCartao, nomeTitular, validade, cvv, checkin, checkout) values
 ("Ana Julia dos Santos", "356.474.465-01", "48.342.289-5", "Ana@gmail.com", "(11) 98721-8931", "8555321495356758", "Ana", "2030-05-30",
- "879", "2023-12-10 09:00:00", "2023-12-15 19:00:00", 1);
+ "879", "2023-12-10 09:00:00", "2023-12-15 19:00:00");
  
 select * from clientes;
 
-select quartos.idQuarto,
-clientes.celular
-from quartos inner join clientes
-on quartos.idQuarto = clientes.idQuarto where numeroQuarto = 505;
+
+delete from clientes where idCliente = 3;
+
+
+/* Buscar todas as informações da tabela quartos que está vinculada à tabela clientes pelo campo idQuarto */
+select * from Quartos inner join clientes
+on Quartos.idQuarto = clientes.idQuarto;
+
+
+
+/* Buscar o nome completo e o cellar na tabela clientes que alugou o quarto de numero 505, pois a tabela quartos está vinculada à tabela clientes 
+pelo campo idQuarto */
+select clientes.nomeCompleto, clientes.celular from Quartos inner join clientes on Quartos.idQuarto where numeroQuarto = 101;
+
+select clientes.nomeCompleto, clientes.checkout, clientes.checkin from Quartos inner join clientes on Quartos.idQuarto = clientes.idQuarto 
+where numeroQuarto = 505;
+
+select clientes.nomeCompleto as Nome, date_format(clientes.checkout, '%d/%m/%Y - %H:%i') as checkout from Quartos inner join clientes
+on Quartos.idQuarto = clientes.idQuarto where numeroQuarto = 101;
+
+select clientes.nomeCompleto as Nome, date_format(clientes.checkout, '%d/%m/%Y - %H:%i') as checkout from Quartos inner join clientes
+on Quartos.idQuarto = clientes.idQuarto where numeroQuarto = 505;
 
 /* Fim Clientes */
+
+/*_____________________________________________________________________________________________________________________________________________________*/
+
+/* Tabela Pedidos*/
+ 
+/* dataPedido timestamp default current_timestamp, significa que a data do sistema é o mesmo do pedido
+statusPedido é a situação do pedido*/
+
+create table Pedidos (
+
+idPedidos int key auto_increment,
+dataPedido timestamp default current_timestamp,
+statusPedido enum("Pendente", "Finalizado", "Cancelado") not null,
+idCliente int not null,
+foreign key (idCliente) references clientes (idCliente)
+
+);
+
+describe Pedidos;
+
+/* Abertura de pedidos */
+
+insert into Pedidos (statusPedido, idCliente) values ("Pendente", 1);
+insert into Pedidos (statusPedido, idCliente) values ("Finalizado", 2);
+
+/* Fim Pedidos*/
