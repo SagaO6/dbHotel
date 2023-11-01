@@ -247,6 +247,7 @@ describe Pedidos;
 
 insert into Pedidos (statusPedido, idCliente) values ("Finalizado", 1);
 
+select * from Pedidos inner join Clientes on Pedidos.idCliente = Clientes.idCliente;
 select * from Pedidos;
 
 create table itensPedidos(
@@ -268,3 +269,10 @@ delete from itensPedidos where iditensPedidos = 2;
 select * from itensPedidos;
 select itensPedidos.iditensPedidos, Pedidos.idPedido, Produtos.idProduto, Produtos.nomeProduto, Produtos.precoProduto, Produtos.categoriaProduto
 from (itensPedidos inner join Pedidos on itensPedidos.idPedido = Pedidos.idPedido) inner join Produtos on itensPedidos.idProduto = Produtos.idProduto;
+
+
+
+
+select Clientes.nomeCliente, Pedidos.idPedido, Pedidos.dataPedido, itensPedidos.quantidade, Produtos.nomeProduto, Produtos.precoProduto 
+from (Pedidos inner join Clientes on Pedidos.idCliente = Clientes.idCliente) inner join itensPedidos on Pedidos.idPedido = itensPedidos.idPedido inner join 
+Produtos on Produtos.idProduto = itensPedidos.idProduto;
