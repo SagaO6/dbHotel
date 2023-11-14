@@ -34,42 +34,52 @@ descricaoProduto text,
 precoProduto decimal(10,2) not null,
 estoqueProduto int not null,
 categoriaProduto enum ("Pães","Bolos", "confeitaria", "salgados"),
-idFornecedor int not null,
-foreign key (idFornecedor) references Fornecedores (idFornecedor),
 validadeProduto date,
 pesoProduto decimal (10,2),
-igredientesProduto text
+ingredientesProduto text,
+idFornecedor int not null,
+foreign key (idFornecedor) references Fornecedores (idFornecedor)
 
 );
 
+
 describe Produtos;
 
-insert into Produtos (nomeProduto, descricaoProduto, precoProduto, estoqueProduto, categoriaProduto, idFornecedor) values ("coxinha", 
-"massa de farinha de trigo recheada com um delicioso recheio de frango desfiado, catupiry (um tipo de requeijão cremoso), 
-temperos e, às vezes, outros ingredientes, como ervilhas e milho.", 2.00, "100", "salgados", 1);
 
-insert into Produtos (nomeProduto, descricaoProduto, precoProduto, estoqueProduto, categoriaProduto, idFornecedor) values ("pão", "Ele é feito 
-a partir de uma mistura de ingredientes simples, principalmente farinha de trigo, água, sal e fermento. Aqui está uma descrição geral de um pão"
-, 0.60, "10", "Pães", 1);
+insert into Produtos 
+(nomeProduto, descricaoProduto, precoProduto, estoqueProduto, categoriaProduto, idFornecedor, ingredientesProduto, pesoProduto, validadeProduto) 
+values ("coxinha", "massa de farinha de trigo recheada com um delicioso recheio de frango desfiado, catupiry (um tipo de requeijão cremoso), temperos e,
+ às vezes, outros ingredientes, como ervilhas e milho.", 2.00, "100", "salgados", 1, "2 litros de água, 1 kg de farinha de trigo peneirada, 2 caldos de galinha,
+1 colher de margarina, 1 colher rasa de sal, 1 colher de colorífico", "120", '2023-11-16');
+insert into Produtos 
+(nomeProduto, descricaoProduto, precoProduto, estoqueProduto, categoriaProduto, idFornecedor, ingredientesProduto, pesoProduto, validadeProduto) 
+values ("pão", "Ele é feito a partir de uma mistura de ingredientes simples, principalmente farinha de trigo, água, sal e fermento. Aqui está uma 
+descrição geral de um pão", 0.60, "10", "Pães", 1, "1 colher (sopa) de fermento biológico seco, 2 colheres (sopa) de açúcar,
+1 xícara (chá) de leite morno, 1 ovo, 4 colheres (sopa) de Manteiga Qualy sem sal derretida (mais um pouco para untar a forma),
+1 colher (café) de sal, 4 xícaras (chá) de farinha de trigo (mais um pouco para enfarinhar a forma)", "0.47", '2023-11-16');
+
+
+alter table Produtos add column validadeProduto date;
+alter table Produtos add column pesoProduto decimal (10,2);
+alter table Produtos add column ingredientesProduto text;
+alter table Produtos change column idFornecedor idFornecedor int not null after ingredientesProduto;
+
 
 update Produtos set ingredientesProduto = "1 colher (sopa) de fermento biológico seco, 2 colheres (sopa) de açúcar,
 1 xícara (chá) de leite morno, 1 ovo, 4 colheres (sopa) de Manteiga Qualy sem sal derretida (mais um pouco para untar a forma),
 1 colher (café) de sal, 4 xícaras (chá) de farinha de trigo (mais um pouco para enfarinhar a forma)" where idProduto = 1;
 update Produtos set pesoProduto = "0.47" where idProduto = 1;
 update Produtos set validadeProduto = '2023-11-16' where idProduto = 1;
-
-update Produtos set ingredientesProduto = "2 litros de água, 1 kg de farinha de trigo peneirada, 2 caldos de galinha,
+update Produtos set ingredientesProduto = "2 litros de água, 2 caldos de galinha,
 1 colher de margarina, 1 colher rasa de sal, 1 colher de colorífico" where idProduto = 2;
 update Produtos set pesoProduto = "120" where idProduto = 2;
 update Produtos set validadeProduto = '2023-11-16' where idProduto = 2;
 
-ALTER TABLE Produtos ADD COLUMN validadeProduto date;
-ALTER TABLE Produtos ADD COLUMN pesoProduto decimal (10,2);
-ALTER TABLE Produtos ADD COLUMN ingredientesProduto text;
 
 select * from Produtos;
 select * from Produtos where categoriaProduto = "Pães";
 select * from Produtos where precoProduto < 50.00 order by precoProduto asc;
+
 
 
 
@@ -133,12 +143,22 @@ describe itensPedidos;
 insert into itensPedidos (idPedido, idProduto, quantidade) values (1, 2, 5); 
 insert into itensPedidos (idPedido, idProduto, quantidade) values (1, 1, 5); 
 
+
+
 select * from itensPedidos;
 select Clientes.nomeCliente, Pedidos.idPedido, Pedidos.dataPedido, itensPedidos.quantidade, Produtos.nomeProduto, Produtos.precoProduto 
 from (Pedidos inner join Clientes on Pedidos.idCliente = Clientes.idCliente) inner join itensPedidos on Pedidos.idPedido = itensPedidos.idPedido inner join 
 Produtos on Produtos.idProduto = itensPedidos.idProduto;
 
 
-select sum(quantidade * 2.60) as Total from itensPedidos 
-inner join Produtos on  itensPedidos.idProduto = Produtos.idProduto 
-inner join Pedidos on itensPedidos.idPedido = Pedidos.idPedido where Pedidos.idPedido = 1;
+select sum(Produtos.precoProduto * itensPedidos.quantidade) as Total from itensPedidos
+inner join Produtos on  itensPedidos.idProduto = Produtos.idProduto;
+
+
+
+
+select * from Produtos where validadeProduto > curdate();
+
+select * from Produtos where ingredientesProduto like '%glúten%';
+
+select * from Produtos where categoriaProduto = 'Pães' and ingredientesProduto not like '%farinha de trigo%' and precoProduto < 7.90;
