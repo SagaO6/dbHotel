@@ -160,10 +160,17 @@ inner join Pedidos on clientes.idCliente = Pedidos.idCliente
 inner join Reserva on Reserva.idPedido = Pedidos.idPedido 
 inner join Quartos on Reserva.idQuarto = Quartos.idQuarto;
 
-select sum(Quartos.preco) as total from Reserva inner join Quartos on Reserva.idQuarto = Quartos.idQuarto where idPedido = 1;
+select sum(Quartos.preco) as total from Reserva inner join Quartos on Reserva.idQuarto = Quartos.idQuarto where idPedido = 2;
 
-select clientes.nomeCompleto, clientes.cpf, Pedidos.idPedido, Quartos.tipoQuarto, Quartos.nome, Quartos.andar, Quartos.numeroQuarto,  sum(Quartos.preco) as total from clientes 
+select clientes.nomeCompleto, clientes.cpf, Pedidos.idPedido, Quartos.tipoQuarto, Quartos.nome, Quartos.andar, Quartos.numeroQuarto, 
+sum(Quartos.preco) as total from clientes 
 inner join Pedidos on clientes.idCliente = Pedidos.idCliente 
 inner join Reserva on Reserva.idPedido = Pedidos.idPedido 
 inner join Quartos on Reserva.idQuarto = Quartos.idQuarto where Pedidos.idPedido = 1
 group by clientes.nomeCompleto, clientes.cpf, Pedidos.idPedido, Quartos.tipoQuarto, Quartos.nome, Quartos.andar, Quartos.numeroQuarto;
+
+
+/* Ana Julia dos Santos - idPedido 2
+Deluxe ( 5º andar, numero 505, preço/diaria R$1000.00 )*
+check in: 2023-11-02 14:00:00
+checkout: 2023-11-05 12:00:00/* 
